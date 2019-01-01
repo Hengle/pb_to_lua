@@ -1,0 +1,41 @@
+syntax = "proto3";
+package Message;
+import "McommonData.proto";
+option java_package="Message";
+option java_outer_classname="MMail";
+/// 消息号：105XXX
+
+//查看某邮件，返回MailStatusNotice
+message ReqViewMail
+{ 
+	required int64 mailId=1;		//uid，个人邮件指
+	required EnumMailType type = 2;
+}
+
+//请求领取附件，返回资源更新，ResMailGetAward和MailStatusNotice
+message ReqMailGetAward
+{ 
+	required int64 mailId=1;
+	required EnumMailType type = 2;
+}
+
+
+
+//请求发送邮件
+message ReqSendMail
+{ 
+	required string userName=1; //收件人名称
+	required int64 unionId =2; //收件联盟
+	required string content=3; //内容	
+}
+
+message ResSendMail
+{ 
+	required int32 res=1; //0：发送成功，其他发送失败
+}
+
+//请求领取所有邮件的附件，返回资源更新，ResMailGetAward和MailStatusNotice
+message ReqTakeAllMailReward
+{ 
+}
+

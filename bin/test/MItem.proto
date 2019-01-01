@@ -1,0 +1,50 @@
+syntax = "proto3";
+package Message;
+
+option java_package="Message";
+option java_outer_classname="MItem";
+
+
+//请求加速道具列表
+message ReqSpeedUpItemList { 
+}
+
+//加速道具列表
+message ResSpeedUpItemList { 
+	repeated Item list = 1;
+}
+
+//道具结构
+message Item{
+	required int32 itemID = 1;//道具ID
+	required int32 count = 2;//道具数量
+}
+
+//请求使用加速道具
+message ReqUseSpeedItem{ 
+	required int32 itemID = 1;//要使用的道具ID 如果是免费加速该字段是-1
+	required int64 eventID = 2;//用来加速的事件id
+	required int32 itemNum = 3;//要使用的道具的数量 -1则是免费加速的时候
+}
+
+//使用加速度道具结果
+message ResUseSpeedItem{ 
+	required int32 res = 1;//0 成功 1 道具数量不够 2 找不到事件 3 事件类型错误 4 指不到建筑配置 5 事件类型不对
+	optional int32 restCount = 2;//剩余数量
+	optional int32 itemID = 3;//道具id
+}
+
+//请求使用打怪物加速道具
+message ReqUseMonsterSpeedItem { 
+	required int32 propId = 1;
+}
+
+//使用怪物加速道具通知消息
+message MonsterSpeedItemNotice { 
+	required MonsterSpeedItemInfo info = 1;	
+}
+
+message MonsterSpeedItemInfo {
+	required int32 propId = 1;		//使用的加速道具id
+	required int64 endTime = 2;		//效果截止时间
+}
