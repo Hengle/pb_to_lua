@@ -277,7 +277,7 @@ func (this*PBParser) Parse(tokenInfos []*TokenInfo,fileName string) error{
 		if v==nil {
 			continue
 		}
-		
+
 		if f:=v.(*EnumField);f!=nil{
 			return errors.New( fmt.Sprintf("错误的行,文件:%s,行%d,值:%s",f.FileName,f.Index+1,f.Name))
 		}

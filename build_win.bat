@@ -1,4 +1,4 @@
-set GOPATH=%~dp0
+set GOPATH="%~dp0"
 
 set GOARCH=amd64
 set GOOS=windows

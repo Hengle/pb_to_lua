@@ -23,7 +23,7 @@ func (this*LuaHelper) GetMsgName(field * EnumField) string {
 }
 
 func (this*LuaHelper) GetMsgID(field * EnumField) string {
-    return  strconv.Itoa(field.Index)
+    return  strconv.Itoa(field.Value)
 }
 
 func (this*LuaHelper) IsNotLast(field * EnumField) bool {
@@ -44,6 +44,9 @@ func (this*LuaHelper) GetEnumFieldComment(field * EnumField) string {
     }
     //logger.Debug("注释：",str)
     return str
+}
+func (this*LuaHelper)HasMsgIdEnum() bool {
+    return this.MsgIdEnum!=nil
 }
 
 func (this*LuaHelper) GetEnumComment(enum * EnumType) string {
@@ -97,22 +100,36 @@ func GenLua(srcText string,parser * PBParser,MsgIDEnumName string,outPath string
 
     //输出没有给定消息id号的消息
     if helper.MsgIdEnum!=nil{
-        for _,v:=range parser.Classes{
-            hasId:=false
-            for _,m :=range  helper.MsgIdEnum.Fields{
-                strs:= strings.Split(m.Name,"_")
-                name:= strs[len(strs) - 1]
-                if v.Name == name{
+        for _,v:=range parser.Classes {
+            hasId := false
+            for _, m := range helper.MsgIdEnum.Fields {
+                strs := strings.Split(m.Name, "_")
+                name := strs[len(strs)-1]
+                if v.Name == name {
                     hasId = true
                     break
                 }
             }
             if !hasId {
-                logger.Warn("没有指定消息id号的消息："+v.Name)
+                logger.Warn("没有指定消息id号的消息：" + v.Name)
             }
         }
+        //查找重复的id
+        for _, m := range helper.MsgIdEnum.Fields {
+            strs := strings.Split(m.Name, "_")
+            name := strs[len(strs)-1]
+            for _, m1 := range helper.MsgIdEnum.Fields {
+                if m == m1{
+                    continue
+                }
+                if m.Value == m1.Value{
+                    strs1 := strings.Split(m1.Name, "_")
+                    name1 := strs1[len(strs1)-1]
+                    logger.Error("消息id重复:",name,"和",name1)
+                }
+            }
         }
-
+    }
 
     funcMap := template.FuncMap{
         "GetMsgName"			:helper.GetMsgName,
@@ -121,6 +138,7 @@ func GenLua(srcText string,parser * PBParser,MsgIDEnumName string,outPath string
         "IsNotMsgIdEnum"        :helper.IsNotMsgIdEnum,
         "GetEnumFieldComment"   :helper.GetEnumFieldComment,
         "GetEnumComment"        :helper.GetEnumComment,
+        "HasMsgIdEnum"          :helper.HasMsgIdEnum,
     }
 
     ////通过代码加载的tpl字符串

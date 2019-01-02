@@ -5,13 +5,19 @@ syntax = "proto3"
 {{.TargetText}}
 ]],
 
+{{if HasMsgIdEnum }}
 MsgIdByName ={ {{range $field := .MsgIdEnum.Fields}}
 	["{{GetMsgName $field}}"] = {{GetMsgID $field}}{{if IsNotLast $field}},{{end}}  {{end}}
 },
 
 MsgNameByID ={ {{range $field := .MsgIdEnum.Fields}}
 	[{{GetMsgID $field}}] = "{{GetMsgName $field}}"{{if IsNotLast $field}},{{end}}  {{end}}
+},
+
+MsgName ={ {{range $field := .MsgIdEnum.Fields}}
+	{{GetMsgName $field}} = "{{GetMsgName $field}}"{{if IsNotLast $field}},{{end}}  {{end}}
 }
+{{end}}
 }
 
 ---@class ProtoEnum

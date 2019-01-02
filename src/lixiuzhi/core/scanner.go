@@ -10,7 +10,7 @@ const(
 )
 
 var ignoreChars = [...]rune{' ','\t'}
-var standTokenChars = [...]rune{'=',':',';','/','[',']','{','}','*','+','-','>','(',')' }
+var standTokenChars = [...]rune{'=',':',';',',','/','[',']','{','}','*','+','-','>','(',')' }
 
 type TokenInfo struct {
 	Value 		string
@@ -56,6 +56,7 @@ func (this*Scanner) GetTokens(text,filename string) ([]*TokenInfo) {
 
 	var buf bytes.Buffer
 	i:=0
+
 	//var eofFlag = false
 	for _, c := range text {
 		//如果是换行，写入

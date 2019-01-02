@@ -63,6 +63,8 @@ func main(){
 			if data,err1:=ioutil.ReadFile(cfg.ProtoPath+"/"+v.Name());err1==nil{
 
 				var strTmp = string(data)
+				//移除utf-8 bom的 标识符
+				strTmp = strings.Replace(strTmp,"\uFEFF","",1)
 				//文件末尾 添加一个换行符
 				strTmp +="\n"
 				allSrcText+=strTmp
@@ -89,9 +91,9 @@ func main(){
 		}
 	}
 
-	//for _,v:=range tokens{
-	//	logger.Debug(*v)
-	//}
+/*	for _,v:=range tokens{
+		logger.Debug(*v)
+	}*/
 
 	parser :=&pbexport.PBParser{}
 	if err:=parser.Parse(tokens,"proto");err!=nil{
